@@ -1,3 +1,2 @@
-﻿  HelloWorld.cpp
-  Chapter1.vcxproj -> G:\Workspace\MyGitHub\Cpp\CppLearn\CppPrimer\Debug\Chapter1.exe
-  Chapter1.vcxproj -> G:\Workspace\MyGitHub\Cpp\CppLearn\CppPrimer\Debug\Chapter1.pdb (Full PDB)
+﻿  Ex01_16.cpp
+LINK : fatal error LNK1561: 必须定义入口点

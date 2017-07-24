@@ -118,6 +118,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Ex01_03.cpp" />
+    <ClCompile Include="Ex01_09.cpp" />
+    <ClCompile Include="Ex01_10.cpp" />
+    <ClCompile Include="Ex01_11.cpp" />
+    <ClCompile Include="Ex01_16.cpp" />
     <ClCompile Include="HelloWorld.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
