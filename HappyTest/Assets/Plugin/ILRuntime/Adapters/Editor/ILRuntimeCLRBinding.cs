@@ -18,19 +18,19 @@ public class ILRuntimeCLRBinding
         //types.Add(typeof(string));
         //types.Add(typeof(Array));
         //types.Add(typeof(Vector2));
-        types.Add(typeof(Vector3));
+        //types.Add(typeof(Vector3));
         //types.Add(typeof(Quaternion));
         //types.Add(typeof(GameObject));
         //types.Add(typeof(UnityEngine.Object));
         //types.Add(typeof(Transform));
         //types.Add(typeof(RectTransform));
-        //types.Add(typeof(CLRBindingTestClass));
+        types.Add(typeof(CLRBindingTestClass));
         //types.Add(typeof(Time));
         //types.Add(typeof(Debug));
         //所有DLL内的类型的真实C#类型都是ILTypeInstance
         //types.Add(typeof(List<ILRuntime.Runtime.Intepreter.ILTypeInstance>));
 
-        ILRuntime.Runtime.CLRBinding.BindingCodeGenerator.GenerateBindingCode(types, "Assets/ILRuntime/Generated");
+        ILRuntime.Runtime.CLRBinding.BindingCodeGenerator.GenerateBindingCode(types, "Assets/Plugin/ILRuntime/Generated");
 
     }
 
@@ -45,7 +45,7 @@ public class ILRuntimeCLRBinding
         }
         //Crossbind Adapter is needed to generate the correct binding code
         InitILRuntime(domain);
-        ILRuntime.Runtime.CLRBinding.BindingCodeGenerator.GenerateBindingCode(domain, "Assets/ILRuntime/Generated");
+        ILRuntime.Runtime.CLRBinding.BindingCodeGenerator.GenerateBindingCode(domain, "Assets/Plugin/ILRuntime/Generated");
     }
 
     static void InitILRuntime(ILRuntime.Runtime.Enviorment.AppDomain domain)
