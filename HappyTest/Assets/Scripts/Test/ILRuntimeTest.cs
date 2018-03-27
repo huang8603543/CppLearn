@@ -128,6 +128,14 @@ public class ILRuntimeTest : MonoBehaviour
         #endregion
 
         appDomain.RegisterValueTypeBinder(typeof(Vector3), new Vector3Binder());
+
+
+        #region UniRX
+
+        appDomain.DelegateManager.RegisterMethodDelegate<Exception>();
+        appDomain.DelegateManager.RegisterMethodDelegate<UniRx.Unit>();
+
+        #endregion
     }
 
     unsafe void OnHotFixLoaded()
@@ -173,7 +181,15 @@ public class ILRuntimeTest : MonoBehaviour
 
         new NativeValueTypeBinderClass("NativeValueTypeBinderClass", appDomain, contentRoot, button, true);
         new ILRunTimeValueTypeBinderClass("ILValueTypeBinderClass", appDomain, contentRoot, button, true);
-        
+
+        #endregion
+
+
+        #region UniRX
+
+        new UniRXTestOne("UniRXTestOne", appDomain, contentRoot, button, false);
+        new UniRXTestTwo("UniRXTestTwo", appDomain, contentRoot, button, false);
+
         #endregion
     }
 
