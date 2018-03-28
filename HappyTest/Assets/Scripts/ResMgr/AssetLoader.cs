@@ -12,6 +12,13 @@ namespace Happy.Res
             return LoadObject<GameObject>(fileName, cacheType);
         }
 
-        public T LoadObject<T>(string fileName, Resource)
+        public T LoadObject<T>(string fileName, ResourceCacheType cacheType) where T : UnityEngine.Object
+        {
+            AssetInfo asset = FindAssetInfo(fileName);
+            if (asset == null)
+                return null;
+
+
+        }
     }
 }
