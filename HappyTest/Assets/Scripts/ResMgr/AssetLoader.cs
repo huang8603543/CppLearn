@@ -9,16 +9,17 @@ namespace Happy.Res
     {
         public override GameObject LoadPrefab(string fileName, ResourceCacheType cacheType)
         {
-            return LoadObject<GameObject>(fileName, cacheType);
+            //return LoadObject<GameObject>(fileName, cacheType);
+            return null;
         }
 
-        public T LoadObject<T>(string fileName, ResourceCacheType cacheType) where T : UnityEngine.Object
-        {
-            AssetInfo asset = FindAssetInfo(fileName);
-            if (asset == null)
-                return null;
+        //public T LoadObject<T>(string fileName, ResourceCacheType cacheType) where T : UnityEngine.Object
+        //{
+        //    AssetInfo asset = FindAssetInfo(fileName);
+        //    if (asset == null)
+        //        return null;
 
 
-        }
+        //}
     }
 }

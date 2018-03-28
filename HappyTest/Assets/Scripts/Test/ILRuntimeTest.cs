@@ -92,6 +92,8 @@ public class ILRuntimeTest : MonoBehaviour
         appDomain.DelegateManager.RegisterMethodDelegate<int>();
         appDomain.DelegateManager.RegisterFunctionDelegate<int, string>();
         appDomain.DelegateManager.RegisterMethodDelegate<string>();
+        appDomain.DelegateManager.RegisterMethodDelegate<int, int>();
+        appDomain.DelegateManager.RegisterMethodDelegate<List<int>, List<int>>();
 
         //appDomain.DelegateManager.RegisterDelegateConvertor<TestDelegateMethod>((action) =>
         //{
@@ -127,6 +129,13 @@ public class ILRuntimeTest : MonoBehaviour
 
         #endregion
 
+        #region Adaptor
+
+        appDomain.RegisterCrossBindingAdaptor(new ViewModelBaseAdapter());
+        appDomain.RegisterCrossBindingAdaptor(new UnityGuiViewAdapter());
+
+        #endregion
+
         appDomain.RegisterValueTypeBinder(typeof(Vector3), new Vector3Binder());
 
 
@@ -142,8 +151,8 @@ public class ILRuntimeTest : MonoBehaviour
     {
         #region TestOne
 
-        new NativeTestOne("NativeTestOne", appDomain, contentRoot, button, true);
-        new ILRunTimeTestOne("ILRunTimeTestOne", appDomain, contentRoot, button, true);
+        //new NativeTestOne("NativeTestOne", appDomain, contentRoot, button, true);
+        //new ILRunTimeTestOne("ILRunTimeTestOne", appDomain, contentRoot, button, true);
 
         #endregion
 
@@ -189,6 +198,16 @@ public class ILRuntimeTest : MonoBehaviour
 
         new UniRXTestOne("UniRXTestOne", appDomain, contentRoot, button, false);
         new UniRXTestTwo("UniRXTestTwo", appDomain, contentRoot, button, false);
+
+        #endregion
+
+        #region MVVM
+
+        new MVVMTestOne("MVVMTestOne", appDomain, contentRoot, button, false);
+        new MVVMTestTwo("MVVMTestTwo", appDomain, contentRoot, button, false);
+
+
+        new MVVMPanelTestOne("MVVMPanelTestOne", appDomain, contentRoot, button, false);
 
         #endregion
     }
