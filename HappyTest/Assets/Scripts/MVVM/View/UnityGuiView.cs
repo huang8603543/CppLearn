@@ -4,8 +4,16 @@ using UnityEngine;
 namespace Happy.MVVM
 {
     [RequireComponent(typeof(CanvasGroup))]
-    public abstract class UnityGuiView<T> : IView<T> where T : ViewModelBase
+    public abstract class UnityGuiView : IView<ViewModelBase>
     {
+        public virtual string ViewName
+        {
+            get
+            {
+                return string.Empty;
+            }
+        }
+
         public GameObject GameObject
         {
             get;
@@ -46,8 +54,8 @@ namespace Happy.MVVM
             set;
         }
 
-        protected readonly PropertyBinder<T> binder = new PropertyBinder<T>();
-        public readonly BindableProperty<T> viewModelProperty = new BindableProperty<T>();
+        protected readonly PropertyBinder<ViewModelBase> binder = new PropertyBinder<ViewModelBase>();
+        public readonly BindableProperty<ViewModelBase> viewModelProperty = new BindableProperty<ViewModelBase>();
 
         public Action RevealedAction
         {
@@ -61,7 +69,7 @@ namespace Happy.MVVM
             set;
         }
 
-        public T BindingContext
+        public ViewModelBase BindingContext
         {
             get
             {
@@ -80,7 +88,8 @@ namespace Happy.MVVM
 
         protected virtual void OnInitialize()
         {
-            GameObject = GameObject.Find(GetType().Name);
+            GameObject = GameObject.Find(ViewName);
+            GameObject.AddComponent<CanvasGroup>();
             viewModelProperty.OnValueChanged += OnBindingContextChanged;
         }
 
@@ -199,7 +208,7 @@ namespace Happy.MVVM
             //});
         }
 
-        public void OnBindingContextChanged(T oldValue, T newValue)
+        public void OnBindingContextChanged(ViewModelBase oldValue, ViewModelBase newValue)
         {
             binder.UnBind(oldValue);
             binder.Bind(newValue);

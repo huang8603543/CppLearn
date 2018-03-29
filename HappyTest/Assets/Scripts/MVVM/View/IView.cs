@@ -2,9 +2,9 @@
 
 namespace Happy.MVVM
 {
-    public interface IView<T> where T : ViewModelBase
+    public interface IView<ViewModelBase>
     {
-        T BindingContext
+        ViewModelBase BindingContext
         {
             get;
             set;

@@ -94,6 +94,7 @@ public class ILRuntimeTest : MonoBehaviour
         appDomain.DelegateManager.RegisterMethodDelegate<string>();
         appDomain.DelegateManager.RegisterMethodDelegate<int, int>();
         appDomain.DelegateManager.RegisterMethodDelegate<List<int>, List<int>>();
+        appDomain.DelegateManager.RegisterMethodDelegate<string, string>();
 
         //appDomain.DelegateManager.RegisterDelegateConvertor<TestDelegateMethod>((action) =>
         //{
