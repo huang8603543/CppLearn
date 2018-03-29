@@ -14,36 +14,36 @@ namespace Happy.MVVM
         private readonly List<BindHandler> binders = new List<BindHandler>();
         private readonly List<UnBindHandler> unBinders = new List<UnBindHandler>();
 
-        //public void Add<TProperty>(string name,  Action<TProperty, TProperty> valueChangedHandler)
-        //{
-        //    var fieldInfo = typeof(T).GetField(name, BindingFlags.Instance | BindingFlags.Public);
-        //    if (fieldInfo == null)
-        //    {
-        //        throw new Exception(string.Format("Unable to find bindableproperty field '{0}.{1}'", typeof(ViewModelBase).Name, name));
-        //    }
+        public void Add<TProperty>(string name, string realTypeName, Action<TProperty, TProperty> valueChangedHandler)
+        {
+            var fieldInfo =  ILRuntimeTest.appDomain.LoadedTypes[realTypeName].ReflectionType.GetField(name, BindingFlags.Instance | BindingFlags.Public);
+            if (fieldInfo == null)
+            {
+                throw new Exception(string.Format("Unable to find bindableproperty field '{0}.{1}'", realTypeName, name));
+            }
 
-        //    _binders.Add(viewmodel =>
-        //    {
-        //        GetPropertyValue<TProperty>(name, viewmodel, fieldInfo).OnValueChanged += valueChangedHandler;
-        //    });
+            binders.Add(viewModel =>
+            {
+                GetPropertyValue<TProperty>(name, viewModel, realTypeName, fieldInfo).OnValueChanged += valueChangedHandler;
+            });
 
-        //    _unbinders.Add(viewModel =>
-        //    {
-        //        GetPropertyValue<TProperty>(name, viewModel, fieldInfo).OnValueChanged -= valueChangedHandler;
-        //    });
-        //}
+            unBinders.Add(viewModel =>
+            {
+                GetPropertyValue<TProperty>(name, viewModel, realTypeName, fieldInfo).OnValueChanged -= valueChangedHandler;
+            });
+        }
 
-        //private BindableProperty<TProperty> GetPropertyValue<TProperty>(string name, T viewModel, FieldInfo fieldInfo)
-        //{
-        //    var value = fieldInfo.GetValue(viewModel);
-        //    BindableProperty<TProperty> bindableProperty = value as BindableProperty<TProperty>;
-        //    if (bindableProperty == null)
-        //    {
-        //        throw new Exception(string.Format("Illegal bindableproperty field '{0}.{1}' ", typeof(T).Name, name));
-        //    }
+        private BindableProperty<TProperty> GetPropertyValue<TProperty>(string name, ViewModelBase viewModel, string realTypeName, FieldInfo fieldInfo)
+        {
+            var value = fieldInfo.GetValue(viewModel);
+            BindableProperty<TProperty> bindableProperty = value as BindableProperty<TProperty>;
+            if (bindableProperty == null)
+            {
+                throw new Exception(string.Format("Illegal bindableproperty field '{0}.{1}' ", realTypeName, name));
+            }
 
-        //    return bindableProperty;
-        //}
+            return bindableProperty;
+        }
 
         public void Bind(ViewModelBase viewModel)
         {

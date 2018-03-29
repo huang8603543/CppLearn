@@ -14,6 +14,14 @@ namespace Happy.MVVM
             }
         }
 
+        public virtual string ViewModelTypeName
+        {
+            get
+            {
+                return string.Empty;
+            }
+        }
+
         public GameObject GameObject
         {
             get;
@@ -118,11 +126,11 @@ namespace Happy.MVVM
         public virtual void OnAppear()
         {
             GameObject.SetActive(true);
-            BindingContext.OnStartReveal();
         }
 
         private void OnReveal(bool immediate)
         {
+            BindingContext.OnStartReveal();
             if (immediate)
             {
                 Transform.localScale = Vector3.one;
@@ -208,7 +216,7 @@ namespace Happy.MVVM
             //});
         }
 
-        public void OnBindingContextChanged(ViewModelBase oldValue, ViewModelBase newValue)
+        protected virtual void OnBindingContextChanged(ViewModelBase oldValue, ViewModelBase newValue)
         {
             binder.UnBind(oldValue);
             binder.Bind(newValue);

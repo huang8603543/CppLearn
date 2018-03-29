@@ -13,7 +13,7 @@ using ILRuntime.CLR.Utils;
 
 public class ILRuntimeTest : MonoBehaviour
 {
-    ILRuntime.Runtime.Enviorment.AppDomain appDomain;
+    public static ILRuntime.Runtime.Enviorment.AppDomain appDomain;
     byte[] dllBytes;
     byte[] pdbBytes;
 
