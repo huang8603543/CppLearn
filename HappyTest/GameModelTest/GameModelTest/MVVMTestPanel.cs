@@ -16,6 +16,22 @@ namespace GameModelTest
             }
         }
 
+        public override string ViewModelTypeName
+        {
+            get
+            {
+                return typeof(MVVMTestModel).FullName;
+            }
+        }
+
+        public MVVMTestModel ViewModel
+        {
+            get
+            {
+                return (MVVMTestModel)BindingContext;
+            }
+        }
+
         Button button;
         Button button2;
         Text buttonText;
@@ -23,14 +39,12 @@ namespace GameModelTest
         protected override void OnInitialize()
         {
             base.OnInitialize();
+            binder.Add<string>("buttonText", ViewModelTypeName, ButtonTextValueChanged);
+
             button = GameObject.Find("TestPanelButton").GetComponent<Button>();
             buttonText = button.transform.Find("Text").GetComponent<Text>();
-            button2 = GameObject.Find("TestPanelButton2").GetComponent<Button>();           
-        }
+            button2 = GameObject.Find("TestPanelButton2").GetComponent<Button>();
 
-        public override void OnAppear()
-        {
-            base.OnAppear();
             button.onClick.AsObservable()
                 .Throttle(TimeSpan.FromSeconds(2))
                 .Do(_ => Debug.Log("111"))
@@ -39,18 +53,18 @@ namespace GameModelTest
                 .Throttle(TimeSpan.FromSeconds(2))
                 .Subscribe(_ => Debug.Log("333"));
 
-            MVVMTestModel viewModel = BindingContext as MVVMTestModel;
-            if (viewModel != null)
-            {
-                viewModel.buttonText.OnValueChanged += (oldValue, newValue) => buttonText.text = newValue;
-                button2.onClick.AsObservable()
-                    .Throttle(TimeSpan.FromSeconds(2))
-                    .Do(_ => viewModel.buttonText.Value = "456")
-                    .Throttle(TimeSpan.FromSeconds(2))
-                    .Do(_ => viewModel.buttonText.Value = "789")
-                    .Throttle(TimeSpan.FromSeconds(2))
-                    .Subscribe(_ => viewModel.buttonText.Value = "000");
-            }
+            button2.onClick.AsObservable()
+                .Throttle(TimeSpan.FromSeconds(2))
+                .Do(_ => ViewModel.buttonText.Value = "456")
+                .Throttle(TimeSpan.FromSeconds(2))
+                .Do(_ => ViewModel.buttonText.Value = "789")
+                .Throttle(TimeSpan.FromSeconds(2))
+                .Subscribe(_ => ViewModel.buttonText.Value = "000");
+        }
+
+        void ButtonTextValueChanged(string oldStr, string newStr)
+        {
+            buttonText.text = newStr;
         }
     }
 
@@ -58,9 +72,14 @@ namespace GameModelTest
     {
         public readonly BindableProperty<string> buttonText = new BindableProperty<string>();
 
-        public override void OnFinishReveal()
+        protected override void OnInitialize()        
         {
             base.OnFinishReveal();
+            Initialization();
+        }
+
+        void Initialization()
+        {
             buttonText.Value = "123";
         }
     }
