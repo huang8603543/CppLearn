@@ -68,6 +68,15 @@ public class UnityGuiViewAdapter : CrossBindingAdaptor
         bool _getViewNameGot;
         bool isGetViewNameInvoking = false;
 
+        IMethod _getViewModelTypeName;
+        bool _getViewModelTypeNameGot;
+        bool isGetViewModelTypeNameInvoking = false;
+
+        IMethod _onBindingContextChanged;
+        bool _onBindingContextChangedGot;
+        bool isOnBindingContextChangedInvoking = false;
+        object[] param2 = new object[2];
+
         public Adaptor()
         {
 
@@ -241,6 +250,26 @@ public class UnityGuiViewAdapter : CrossBindingAdaptor
             }
         }
 
+        protected override void OnBindingContextChanged(ViewModelBase oldValue, ViewModelBase newValue)
+        {
+            if (!_onBindingContextChangedGot)
+            {
+                _onBindingContextChanged = instance.Type.GetMethod("OnBindingContextChanged");
+                _onBindingContextChangedGot = true;
+            }
+
+            if (_onBindingContextChanged != null && !isOnBindingContextChangedInvoking)
+            {
+                isOnBindingContextChangedInvoking = true;
+                appdomain.Invoke(_onBindingContextChanged, instance, param2);
+                isOnBindingContextChangedInvoking = false;
+            }
+            else
+            {
+                base.OnBindingContextChanged(oldValue, newValue);
+            }
+        }
+
         public override string ViewName
         {
             get
@@ -261,6 +290,30 @@ public class UnityGuiViewAdapter : CrossBindingAdaptor
                 else
                 {
                     return base.ViewName;
+                }
+            }
+        }
+
+        public override string ViewModelTypeName
+        {
+            get
+            {
+                if (!_getViewModelTypeNameGot)
+                {
+                    _getViewModelTypeName = instance.Type.GetMethod("get_ViewModelTypeName", 0);
+                    _getViewModelTypeNameGot = true;
+                }
+
+                if (_getViewModelTypeName != null && !isGetViewModelTypeNameInvoking)
+                {
+                    isGetViewModelTypeNameInvoking = true;
+                    var res = (string)appdomain.Invoke(_getViewModelTypeName, instance, null);
+                    isGetViewModelTypeNameInvoking = false;
+                    return res;
+                }
+                else
+                {
+                    return base.ViewModelTypeName;
                 }
             }
         }

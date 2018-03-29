@@ -187,6 +187,6 @@ public class ViewModelBaseAdapter : CrossBindingAdaptor
             {
                 base.OnInitialize();
             }
-        }
+        }       
     }
 }
