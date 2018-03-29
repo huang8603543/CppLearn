@@ -39,9 +39,20 @@ namespace GameModelTest
 
         public static void TestThree()
         {
-            GameObject panel = Resources.Load("MVVMTestPanel") as GameObject;
-            panel.transform.SetParent(GameObject.Find("Canvas").transform);
-            new MVVMTestPanel().Reveal();
+            GameObject obj = Resources.Load("MVVMTestPanel") as GameObject;
+            if (obj != null)
+            {
+                GameObject panel = UnityEngine.Object.Instantiate(obj);
+                panel.name = "MVVMTestPanel";
+                panel.transform.SetParent(GameObject.Find("Canvas").transform, false);
+                MVVMTestPanel view = new MVVMTestPanel();
+                view.BindingContext = new MVVMTestModel();
+                view.Reveal();
+            }
+            else
+            {
+                Debug.Log("panel is null");
+            }
         }
 
     }
