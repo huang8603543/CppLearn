@@ -3,7 +3,6 @@ using UnityEngine;
 
 namespace Happy.MVVM
 {
-    [RequireComponent(typeof(CanvasGroup))]
     public abstract class UnityGuiView : IView<ViewModelBase>
     {
         public virtual string ViewName

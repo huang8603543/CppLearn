@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using ILRuntime.Runtime.Stack;
 using ILRuntime.Runtime.Intepreter;
 using ILRuntime.CLR.Utils;
+using Happy.MVVM;
 
 public class ILRuntimeTest : MonoBehaviour
 {
@@ -95,6 +96,8 @@ public class ILRuntimeTest : MonoBehaviour
         appDomain.DelegateManager.RegisterMethodDelegate<int, int>();
         appDomain.DelegateManager.RegisterMethodDelegate<List<int>, List<int>>();
         appDomain.DelegateManager.RegisterMethodDelegate<string, string>();
+        appDomain.DelegateManager.RegisterMethodDelegate<object, MessageArgs<object>>();
+        appDomain.DelegateManager.RegisterMethodDelegate<object, MessageArgs<ILTypeInstance>>();
 
         //appDomain.DelegateManager.RegisterDelegateConvertor<TestDelegateMethod>((action) =>
         //{
