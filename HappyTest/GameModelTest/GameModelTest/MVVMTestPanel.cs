@@ -46,12 +46,21 @@ namespace GameModelTest
             button2 = GameObject.Find("TestPanelButton2").GetComponent<Button>();
 
             button.onClick.AsObservable()
-                .Throttle(TimeSpan.FromSeconds(2))
-                .Do(_ => Debug.Log("111"))
-                .Throttle(TimeSpan.FromSeconds(2))
-                .Do(_ => Debug.Log("222"))
-                .Throttle(TimeSpan.FromSeconds(2))
-                .Subscribe(_ => Debug.Log("333"));
+                .Do(_ => 
+                {
+                    //Type type = BindingContext.GetType();
+                    //Debug.Log("Type: " + type.FullName);
+                    //var nestedTypes = type.GetNestedTypes();
+                    //foreach (var nestedType in nestedTypes)
+                    //{
+                    //    Debug.Log("nestedType: " + nestedType.Name);
+                    //}
+                    ViewModel.buttonOneClick("Hello!!!");
+                })
+                .Throttle(TimeSpan.FromSeconds(1))
+                .Do(_ => MessageAggregator<object>.Instance.Publish("TestOne", this, new MessageArgs<object>("TestOne!!!!")))
+                .Throttle(TimeSpan.FromSeconds(1))
+                .Subscribe(_ => MessageAggregator<CustomTestData>.Instance.Publish("TestTwo", this, new MessageArgs<CustomTestData>(new CustomTestData(100, "Hello"))));
 
             button2.onClick.AsObservable()
                 .Throttle(TimeSpan.FromSeconds(2))
@@ -72,15 +81,46 @@ namespace GameModelTest
     {
         public readonly BindableProperty<string> buttonText = new BindableProperty<string>();
 
+        public Action<string> buttonOneClick;
+
         protected override void OnInitialize()        
         {
-            base.OnFinishReveal();
+            base.OnInitialize();
             Initialization();
+            DelegateSubscribe();
+            buttonOneClick += (str) => Debug.Log("!!! " + str);
         }
 
         void Initialization()
         {
             buttonText.Value = "123";
+        }
+
+        void DelegateSubscribe()
+        {
+            MessageAggregator<object>.Instance.Subscribe("TestOne", TestOneCallBack);
+            MessageAggregator<CustomTestData>.Instance.Subscribe("TestTwo", TestTwoCallBack);
+        }
+
+        void TestOneCallBack(object sender, MessageArgs<object> args)
+        {
+            Debug.Log("sender: " + sender.ToString() + " args: " + (string)args.Item);
+        }
+
+        void TestTwoCallBack(object sender, MessageArgs<CustomTestData> args)
+        {
+            Debug.Log("sender: " + sender.ToString() + " A: " + args.Item.A + " B: " + args.Item.B);
+        }
+    }
+
+    public class CustomTestData
+    {
+        public int A { get; private set; }
+        public string B { get; private set; }
+
+        public CustomTestData(int a, string b)
+        {
+            A = a; B = b;
         }
     }
 }
