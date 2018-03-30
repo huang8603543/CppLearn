@@ -3,6 +3,7 @@ using Happy.MVVM;
 using UnityEngine.UI;
 using UnityEngine;
 using UniRx;
+using Happy.Main;
 
 namespace GameModelTest
 {
@@ -48,13 +49,6 @@ namespace GameModelTest
             button.onClick.AsObservable()
                 .Do(_ => 
                 {
-                    //Type type = BindingContext.GetType();
-                    //Debug.Log("Type: " + type.FullName);
-                    //var nestedTypes = type.GetNestedTypes();
-                    //foreach (var nestedType in nestedTypes)
-                    //{
-                    //    Debug.Log("nestedType: " + nestedType.Name);
-                    //}
                     ViewModel.buttonOneClick("Hello!!!");
                 })
                 .Throttle(TimeSpan.FromSeconds(1))
@@ -88,7 +82,24 @@ namespace GameModelTest
             base.OnInitialize();
             Initialization();
             DelegateSubscribe();
-            buttonOneClick += (str) => Debug.Log("!!! " + str);
+            buttonOneClick += (str) => 
+            {
+                Debug.Log("!!! " + str);
+                var cd = SingletonObjectFactory.Instance.AcquireObject(typeof(CustomTestData).FullName) as CustomTestData;
+                cd.A = 1;
+                cd.B = "1111111111111111";
+                Debug.Log(cd);
+
+                var cd2 = TransientObjectFactory.Instance.AcquireObject(typeof(CustomTestData).FullName) as CustomTestData;
+                cd2.A = 2;
+                cd2.B = "2222222222222222";
+                Debug.Log(cd2);
+
+                var cd3 = PoolObjectFactory.Instance.AcquireObject(typeof(CustomTestData).FullName) as CustomTestData;
+                cd3.A = 3;
+                cd3.B = "3333333333333333";
+                Debug.Log(cd3);
+            };
         }
 
         void Initialization()
@@ -115,12 +126,17 @@ namespace GameModelTest
 
     public class CustomTestData
     {
-        public int A { get; private set; }
-        public string B { get; private set; }
+        public int A { get; set; }
+        public string B { get; set; }
 
         public CustomTestData(int a, string b)
         {
             A = a; B = b;
+        }
+
+        public override string ToString()
+        {
+            return "A: " + A + " B: " + B;
         }
     }
 }
