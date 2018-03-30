@@ -18,16 +18,16 @@ public class ViewModelBaseAdapter : CrossBindingAdaptor
     {
         get
         {
-            return typeof(Adaptor);
+            return typeof(ViewModelBaseAdaptor);
         }
     }
 
     public override object CreateCLRInstance(ILRuntime.Runtime.Enviorment.AppDomain appdomain, ILTypeInstance instance)
     {
-        return new Adaptor(appdomain, instance);
+        return new ViewModelBaseAdaptor(appdomain, instance);
     }
 
-    class Adaptor : ViewModelBase, CrossBindingAdaptorType
+    class ViewModelBaseAdaptor : ViewModelBase, CrossBindingAdaptorType
     {
         ILTypeInstance instance;
         ILRuntime.Runtime.Enviorment.AppDomain appdomain;
@@ -56,12 +56,12 @@ public class ViewModelBaseAdapter : CrossBindingAdaptor
         bool _onInitializeGot;
         bool _isOnInitializeInvoking = false;
 
-        public Adaptor()
+        public ViewModelBaseAdaptor()
         {
 
         }
 
-        public Adaptor(ILRuntime.Runtime.Enviorment.AppDomain appdomain, ILTypeInstance instance)
+        public ViewModelBaseAdaptor(ILRuntime.Runtime.Enviorment.AppDomain appdomain, ILTypeInstance instance)
         {
             this.appdomain = appdomain;
             this.instance = instance;

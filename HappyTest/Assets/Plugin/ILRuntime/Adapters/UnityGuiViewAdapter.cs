@@ -18,16 +18,16 @@ public class UnityGuiViewAdapter : CrossBindingAdaptor
     {
         get
         {
-            return typeof(Adaptor);
+            return typeof(UnityGuiViewAdaptor);
         }
     }
 
     public override object CreateCLRInstance(ILRuntime.Runtime.Enviorment.AppDomain appdomain, ILTypeInstance instance)
     {
-        return new Adaptor(appdomain, instance);
+        return new UnityGuiViewAdaptor(appdomain, instance);
     }
 
-    class Adaptor : UnityGuiView, CrossBindingAdaptorType
+    class UnityGuiViewAdaptor : UnityGuiView, CrossBindingAdaptorType
     {
         ILTypeInstance instance;
         ILRuntime.Runtime.Enviorment.AppDomain appdomain;
@@ -77,12 +77,12 @@ public class UnityGuiViewAdapter : CrossBindingAdaptor
         bool isOnBindingContextChangedInvoking = false;
         object[] param2 = new object[2];
 
-        public Adaptor()
+        public UnityGuiViewAdaptor()
         {
 
         }
 
-        public Adaptor(ILRuntime.Runtime.Enviorment.AppDomain appdomain, ILTypeInstance instance)
+        public UnityGuiViewAdaptor(ILRuntime.Runtime.Enviorment.AppDomain appdomain, ILTypeInstance instance)
         {
             this.appdomain = appdomain;
             this.instance = instance;
