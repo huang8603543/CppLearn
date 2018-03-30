@@ -36,6 +36,7 @@ namespace Happy.Util
                 {
                     GameObject obj = new GameObject();
                     _instance = obj.AddComponent<T>();
+                    obj.name = _instance.GetType().Name;
                 }
                 return _instance;
             }

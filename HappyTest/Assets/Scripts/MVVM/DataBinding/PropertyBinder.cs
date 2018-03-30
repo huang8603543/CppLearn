@@ -1,8 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 using System;
 using System.Reflection;
+using Happy.Main;
 
 namespace Happy.MVVM
 {
@@ -16,7 +15,7 @@ namespace Happy.MVVM
 
         public void Add<TProperty>(string name, string realTypeName, Action<TProperty, TProperty> valueChangedHandler)
         {
-            var fieldInfo =  ILRuntimeTest.appDomain.LoadedTypes[realTypeName].ReflectionType.GetField(name, BindingFlags.Instance | BindingFlags.Public);
+            var fieldInfo = GameApplication.Instance.hotFix.LoadType(realTypeName).GetField(name, BindingFlags.Instance | BindingFlags.Public);
             if (fieldInfo == null)
             {
                 throw new Exception(string.Format("Unable to find bindableproperty field '{0}.{1}'", realTypeName, name));

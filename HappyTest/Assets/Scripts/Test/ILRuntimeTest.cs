@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using UnityEngine;
-using System.IO;
+﻿using UnityEngine;
 using ILRuntime.Runtime.Enviorment;
 using System;
 using UnityEngine.UI;
@@ -10,16 +8,11 @@ using System.Collections.Generic;
 using ILRuntime.Runtime.Stack;
 using ILRuntime.Runtime.Intepreter;
 using ILRuntime.CLR.Utils;
-using Happy.MVVM;
+using Happy.Main;
+using Happy.Util;
 
-public class ILRuntimeTest : MonoBehaviour
+public class ILRuntimeTest : SingletonMono<ILRuntimeTest>
 {
-    public static ILRuntime.Runtime.Enviorment.AppDomain appDomain;
-    byte[] dllBytes;
-    byte[] pdbBytes;
-
-    public bool usePdb = true;
-
     public Transform contentRoot;
     public Button button;
 
@@ -27,131 +20,10 @@ public class ILRuntimeTest : MonoBehaviour
     {
         contentRoot = GameObject.Find("Content").transform;
         button = GameObject.Find("Button").GetComponent<Button>();
-        StartCoroutine(LoadHotFixAssembly());
+        TestCase();
     }
 
-    IEnumerator LoadHotFixAssembly()
-    {
-        appDomain = new ILRuntime.Runtime.Enviorment.AppDomain();
-#if UNITY_ANDROID
-        WWW www = new WWW(Application.streamingAssetsPath + "/GameModelTest.dll");
-#else
-        WWW www = new WWW("file:///" + Application.streamingAssetsPath + "/GameModelTest.dll");
-#endif
-        while (!www.isDone)
-        {
-            yield return null;
-        }
-        if (!string.IsNullOrEmpty(www.error))
-        {
-            Debug.LogError(www.error);
-        }
-        dllBytes = www.bytes;
-        www.Dispose();
-
-        if (usePdb)
-        {
-#if UNITY_ANDROID
-        www = new WWW(Application.streamingAssetsPath + "/GameModelTest.pdb");
-#else
-            www = new WWW("file:///" + Application.streamingAssetsPath + "/GameModelTest.pdb");
-#endif
-            while (!www.isDone)
-            {
-                yield return null;
-            }
-            if (!string.IsNullOrEmpty(www.error))
-            {
-                Debug.LogError(www.error);
-            }
-            pdbBytes = www.bytes;          
-        }
-
-        using (MemoryStream fs = new MemoryStream(dllBytes))
-        {
-            if (pdbBytes != null)
-            {
-                using (MemoryStream p = new MemoryStream(pdbBytes))
-                {
-                    appDomain.LoadAssembly(fs, p, new Mono.Cecil.Pdb.PdbReaderProvider());
-                }
-            }
-            else
-            {
-                appDomain.LoadAssembly(fs, null, new Mono.Cecil.Pdb.PdbReaderProvider());
-            }
-        }
-
-        InitializeILRuntime();
-        OnHotFixLoaded();
-    }
-
-    void InitializeILRuntime()
-    {
-        #region Delegate
-
-        appDomain.DelegateManager.RegisterMethodDelegate<int>();
-        appDomain.DelegateManager.RegisterFunctionDelegate<int, string>();
-        appDomain.DelegateManager.RegisterMethodDelegate<string>();
-        appDomain.DelegateManager.RegisterMethodDelegate<int, int>();
-        appDomain.DelegateManager.RegisterMethodDelegate<List<int>, List<int>>();
-        appDomain.DelegateManager.RegisterMethodDelegate<string, string>();
-        appDomain.DelegateManager.RegisterMethodDelegate<object, MessageArgs<object>>();
-        appDomain.DelegateManager.RegisterMethodDelegate<object, MessageArgs<ILTypeInstance>>();
-
-        //appDomain.DelegateManager.RegisterDelegateConvertor<TestDelegateMethod>((action) =>
-        //{
-        //    //转换器的目的是把Action或者Func转换成正确的类型，这里则是把Action<int>转换成TestDelegateMethod
-        //    return new TestDelegateMethod((a) =>
-        //    {
-        //        //调用委托实例
-        //        ((Action<int>)action)(a);
-        //    });
-        //});
-
-        //appDomain.DelegateManager.RegisterDelegateConvertor<TestDelegateFunction>((action) =>
-        //{
-        //    return new TestDelegateFunction((a) =>
-        //    {
-        //        return ((Func<int, string>)action)(a);
-        //    });
-        //});
-
-        appDomain.DelegateManager.RegisterDelegateConvertor<UnityEngine.Events.UnityAction<float>>((action) =>
-        {
-            return new UnityEngine.Events.UnityAction<float>((a) =>
-            {
-                ((Action<float>)action)(a);
-            });
-        });
-
-        #endregion
-
-        #region CLRBinding
-
-        ILRuntime.Runtime.Generated.CLRBindings.Initialize(appDomain);
-
-        #endregion
-
-        #region Adaptor
-
-        appDomain.RegisterCrossBindingAdaptor(new ViewModelBaseAdapter());
-        appDomain.RegisterCrossBindingAdaptor(new UnityGuiViewAdapter());
-
-        #endregion
-
-        appDomain.RegisterValueTypeBinder(typeof(Vector3), new Vector3Binder());
-
-
-        #region UniRX
-
-        appDomain.DelegateManager.RegisterMethodDelegate<Exception>();
-        appDomain.DelegateManager.RegisterMethodDelegate<UniRx.Unit>();
-
-        #endregion
-    }
-
-    unsafe void OnHotFixLoaded()
+    unsafe void TestCase()
     {
         #region TestOne
 
@@ -162,63 +34,58 @@ public class ILRuntimeTest : MonoBehaviour
 
         #region Invocation
 
-        new ILRuntimeInvocationClass("InvocationClass", appDomain, contentRoot, button, false);
+        new ILRuntimeInvocationClass("InvocationClass", GameApplication.Instance.ILHotFix.appDomain, contentRoot, button, false);
 
         #endregion
 
         #region Delegate
 
-        new ILDelegateClass("ILDelegateClass", appDomain, contentRoot, button, false);
+        new ILDelegateClass("ILDelegateClass", GameApplication.Instance.ILHotFix.appDomain, contentRoot, button, false);
 
         #endregion
 
         #region Inheritance
 
-        new ILInheritanceClass("ILInheritance", appDomain, contentRoot, button, false);
+        new ILInheritanceClass("ILInheritance", GameApplication.Instance.ILHotFix.appDomain, contentRoot, button, false);
 
         #endregion
 
         #region CLRRedirection
 
-        new ILCLRRedirectionClass("CLRRedirection", appDomain, contentRoot, button, false);
+        new ILCLRRedirectionClass("CLRRedirection", GameApplication.Instance.ILHotFix.appDomain, contentRoot, button, false);
 
         #endregion
 
         #region CLRBinding
 
-        new ILCLRBindingClass("ILCLRBinding", appDomain, contentRoot, button, true);
+        new ILCLRBindingClass("ILCLRBinding", GameApplication.Instance.ILHotFix.appDomain, contentRoot, button, true);
 
         #endregion
 
         #region ValueTypeBinder
 
-        new NativeValueTypeBinderClass("NativeValueTypeBinderClass", appDomain, contentRoot, button, true);
-        new ILRunTimeValueTypeBinderClass("ILValueTypeBinderClass", appDomain, contentRoot, button, true);
+        new NativeValueTypeBinderClass("NativeValueTypeBinderClass", GameApplication.Instance.ILHotFix.appDomain, contentRoot, button, true);
+        new ILRunTimeValueTypeBinderClass("ILValueTypeBinderClass", GameApplication.Instance.ILHotFix.appDomain, contentRoot, button, true);
 
         #endregion
 
 
         #region UniRX
 
-        new UniRXTestOne("UniRXTestOne", appDomain, contentRoot, button, false);
-        new UniRXTestTwo("UniRXTestTwo", appDomain, contentRoot, button, false);
+        new UniRXTestOne("UniRXTestOne", GameApplication.Instance.ILHotFix.appDomain, contentRoot, button, false);
+        new UniRXTestTwo("UniRXTestTwo", GameApplication.Instance.ILHotFix.appDomain, contentRoot, button, false);
 
         #endregion
 
         #region MVVM
 
-        new MVVMTestOne("MVVMTestOne", appDomain, contentRoot, button, false);
-        new MVVMTestTwo("MVVMTestTwo", appDomain, contentRoot, button, false);
+        new MVVMTestOne("MVVMTestOne", GameApplication.Instance.ILHotFix.appDomain, contentRoot, button, false);
+        new MVVMTestTwo("MVVMTestTwo", GameApplication.Instance.ILHotFix.appDomain, contentRoot, button, false);
 
 
-        new MVVMPanelTestOne("MVVMPanelTestOne", appDomain, contentRoot, button, false);
+        new MVVMPanelTestOne("MVVMPanelTestOne", GameApplication.Instance.ILHotFix.appDomain, contentRoot, button, false);
 
         #endregion
-    }
-
-    void Update()
-    {
-
     }
 }
 
