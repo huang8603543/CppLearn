@@ -10,6 +10,8 @@ namespace Happy.Main
         private static Dictionary<Type, object> cachedObjects = null;
         private static readonly object _lock = new object();
 
+        
+
         private Dictionary<Type, object> CachedObjects
         {
             get

@@ -30,9 +30,9 @@ namespace Happy.Main
         private TransientObjectFactory _transientObjectFactory = new TransientObjectFactory();
         private static readonly Dictionary<Type, ServiceLocatorContain> Container = new Dictionary<Type, ServiceLocatorContain>();
 
-        public void RegisterSingleton<TInterface, TInstance>(string interfaceName, string typeName) where TInstance : class, new()
+        public void RegisterSingleton(string interfaceName, string typeName)
         {
-            ServiceLocatorContain contain = new ServiceLocatorContain(typeName, Lazy<TInstance>(FactoryType.Singleton, typeName));
+            ServiceLocatorContain contain = new ServiceLocatorContain(typeName, Lazy(FactoryType.Singleton, typeName));
             Type type = GameApplication.Instance.hotFix.LoadType(interfaceName);
             if (!Container.ContainsKey(type))
             {
@@ -45,9 +45,9 @@ namespace Happy.Main
             
         }
 
-        public void RegisterSingleton<TInstance>(string typeName) where TInstance : class, new()
+        public void RegisterSingleton(string typeName)
         {
-            ServiceLocatorContain contain = new ServiceLocatorContain(typeName, Lazy<TInstance>(FactoryType.Singleton, typeName));
+            ServiceLocatorContain contain = new ServiceLocatorContain(typeName, Lazy(FactoryType.Singleton, typeName));
             Type type = GameApplication.Instance.hotFix.LoadType(typeName);
             if (!Container.ContainsKey(type))
             {
@@ -59,9 +59,9 @@ namespace Happy.Main
             }
         }
 
-        public void RegisterTransient<TInterface, TInstance>(string interfaceName, string typeName) where TInstance : class, new()
+        public void RegisterTransient(string interfaceName, string typeName)
         {
-            ServiceLocatorContain contain = new ServiceLocatorContain(typeName, Lazy<TInstance>(FactoryType.Transient, typeName));
+            ServiceLocatorContain contain = new ServiceLocatorContain(typeName, Lazy(FactoryType.Transient, typeName));
             Type type = GameApplication.Instance.hotFix.LoadType(interfaceName);
             if (!Container.ContainsKey(type))
             {
@@ -73,9 +73,9 @@ namespace Happy.Main
             }
         }
 
-        public void RegisterTransient<TInstance>(string typeName) where TInstance : class, new()
+        public void RegisterTransient(string typeName)
         {
-            ServiceLocatorContain contain = new ServiceLocatorContain(typeName, Lazy<TInstance>(FactoryType.Transient, typeName));
+            ServiceLocatorContain contain = new ServiceLocatorContain(typeName, Lazy(FactoryType.Transient, typeName));
             Type type = GameApplication.Instance.hotFix.LoadType(typeName);
             if (!Container.ContainsKey(type))
             {
@@ -106,7 +106,7 @@ namespace Happy.Main
             return Container[type].Function();
         }
 
-        private Func<object> Lazy<TInstance>(FactoryType factoryType, string typeFullName) where TInstance : class, new()
+        private Func<object> Lazy(FactoryType factoryType, string typeFullName)
         {
             return () =>
             {

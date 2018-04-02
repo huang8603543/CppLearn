@@ -1,15 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System;
+﻿using System;
 
 namespace Happy.Main
 {
     public interface IHotFixMain
     {
-        Type LoadType(string realTypeName);
+        Type LoadType(string typeName);
 
-        object CreateInstance(string classFullName);
-
-        object CreateInstance(Type type);
+        object CreateInstance(string typeName);
     }
 }

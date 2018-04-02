@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using Happy.Core;
+using System;
+using UnityEngine;
 
 namespace Happy.Main
 {
@@ -33,6 +35,8 @@ namespace Happy.Main
 
         public bool useILHotFix = true;
 
+        public Action LoadAssemblyOver;
+
         void Awake()
         {
             _instance = this;
@@ -44,12 +48,42 @@ namespace Happy.Main
             else
             {
                 hotFix = HotFixReflector.GetInstance();
+                ReHotFix.loadAssemblyOver += () => ReflectTest.GetInstance();
             }
         }
 
-        void Start()
+        //void Start()
+        //{
+        //    if (useILHotFix)
+        //    {
+        //        ILRuntimeTest.GetInstance();
+        //    }           
+        //}
+
+
+
+
+
+        private async void Start()
         {
-            ILRuntimeTest.GetInstance();
+            DontDestroyOnLoad(gameObject);
+            //GameMgr.Ev
         }
+
+        private void Update()
+        {
+
+        }
+
+        private void LateUpdate()
+        {
+            
+        }
+
+        private void OnApplicationQuit()
+        {
+            
+        }
+
     }
 }

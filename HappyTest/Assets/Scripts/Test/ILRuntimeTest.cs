@@ -10,6 +10,7 @@ using ILRuntime.Runtime.Intepreter;
 using ILRuntime.CLR.Utils;
 using Happy.Main;
 using Happy.Util;
+using System.Reflection;
 
 public class ILRuntimeTest : SingletonMono<ILRuntimeTest>
 {
@@ -142,10 +143,26 @@ public class ExcuteTestClass
         set;
     }
 
+    public Assembly Assembly
+    {
+        get;
+        set;
+    }
+
     public ExcuteTestClass(string testName, ILRuntime.Runtime.Enviorment.AppDomain appDomain, Transform root, Button button, bool showTime)
     {
         TestName = testName;
         AppDomain = appDomain;
+        button = UnityEngine.Object.Instantiate(button);
+        button.transform.SetParent(root);
+        button.GetComponentInChildren<Text>().text = TestName;
+        button.onClick.AddListener(() => Start(showTime));
+    }
+
+    public ExcuteTestClass(string testName, Assembly assemly, Transform root, Button button, bool showTime)
+    {
+        TestName = testName;
+        Assembly = assemly;
         button = UnityEngine.Object.Instantiate(button);
         button.transform.SetParent(root);
         button.GetComponentInChildren<Text>().text = TestName;

@@ -21,6 +21,11 @@ namespace Happy.Core
             componentDict = new Dictionary<Type, Component>();
         }
 
+        //public K AddComponent<K>() where K : Component, new()
+        //{
+        //    K component = ComponentFactory
+        //}
+
         public override void Dispose()
         {
             base.Dispose();

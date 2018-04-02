@@ -18,28 +18,23 @@ namespace Happy.Main
 
         public bool usePdb = true;
 
-        public Type LoadType(string realTypeName)
+        public Type LoadType(string typeName)
         {
-            if (appDomain.LoadedTypes.ContainsKey(realTypeName))
+            if (appDomain.LoadedTypes.ContainsKey(typeName))
             {
-                return appDomain.LoadedTypes[realTypeName].ReflectionType;
+                return appDomain.LoadedTypes[typeName].ReflectionType;
             }
             return null;
         }
 
-        public object CreateInstance(string classFullName)
+        public object CreateInstance(string typeName)
         {
-            IType type = GameApplication.Instance.ILHotFix.appDomain.LoadedTypes[classFullName];
+            IType type = GameApplication.Instance.ILHotFix.appDomain.LoadedTypes[typeName];
             var instance = ((ILType)type).Instantiate();
             return instance;
         }
 
-        public object CreateInstance(Type type)
-        {
-            throw new NotImplementedException();
-        }
-
-        void Start()
+        void Awake()
         {
             StartCoroutine(LoadHotFixAssembly());
         }
