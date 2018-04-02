@@ -4,17 +4,11 @@ using Happy.Util;
 
 namespace Happy.Main
 {
-    public class TransientObjectFactory : Singleton<TransientObjectFactory>, IObjectFactory
+    public class TransientObjectFactory : IObjectFactory
     {
         public object AcquireObject(string classFullName)
         {
             var instance = GameApplication.Instance.hotFix.CreateInstance(classFullName);
-            return instance;
-        }
-
-        public object AcquireObject<TInstance>() where TInstance : class, new()
-        {
-            var instance = new TInstance();
             return instance;
         }
 

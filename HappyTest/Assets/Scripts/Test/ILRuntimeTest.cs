@@ -83,7 +83,7 @@ public class ILRuntimeTest : SingletonMono<ILRuntimeTest>
         new MVVMTestTwo("MVVMTestTwo", GameApplication.Instance.ILHotFix.appDomain, contentRoot, button, false);
 
 
-        new MVVMPanelTestOne("MVVMPanelTestOne", GameApplication.Instance.ILHotFix.appDomain, contentRoot, button, false);
+        new MVVMPanelTestOne("MVVMPanelTestOne", GameApplication.Instance.ILHotFix.appDomain, contentRoot, button, true);
 
         #endregion
     }
@@ -304,7 +304,7 @@ public class NativeValueTypeBinderClass : ExcuteTestClass
         float dot = 0;
         Vector3 a = new Vector3(1, 2, 3);
         Vector3 b = Vector3.one;
-        for (int i = 0; i < 100000; i++)
+        for (int i = 0; i < 1000000; i++)
         {
             a += Vector3.one;
             dot += Vector3.Dot(a, Vector3.zero);

@@ -9,5 +9,7 @@ namespace Happy.Main
         Type LoadType(string realTypeName);
 
         object CreateInstance(string classFullName);
+
+        object CreateInstance(Type type);
     }
 }

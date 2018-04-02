@@ -34,6 +34,11 @@ namespace Happy.Main
             return instance;
         }
 
+        public object CreateInstance(Type type)
+        {
+            throw new NotImplementedException();
+        }
+
         void Start()
         {
             StartCoroutine(LoadHotFixAssembly());
@@ -137,7 +142,7 @@ namespace Happy.Main
 
             #region CLRBinding
 
-            ILRuntime.Runtime.Generated.CLRBindings.Initialize(appDomain);
+            //ILRuntime.Runtime.Generated.CLRBindings.Initialize(appDomain);
 
             #endregion
 
@@ -145,6 +150,8 @@ namespace Happy.Main
 
             appDomain.RegisterCrossBindingAdaptor(new ViewModelBaseAdapter());
             appDomain.RegisterCrossBindingAdaptor(new UnityGuiViewAdapter());
+            appDomain.RegisterCrossBindingAdaptor(new ModuleBaseAdapter());
+            appDomain.RegisterCrossBindingAdaptor(new ComponentAdapter());
 
             #endregion
 

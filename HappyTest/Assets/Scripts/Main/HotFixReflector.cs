@@ -23,5 +23,10 @@ namespace Happy.Main
         {
             throw new NotImplementedException();
         }
+
+        public object CreateInstance(Type type)
+        {
+            return Activator.CreateInstance(type);
+        }
     }
 }

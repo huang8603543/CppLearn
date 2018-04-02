@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using Happy.Util;
 using System;
-using ILRuntime.CLR.TypeSystem;
 
 namespace Happy.Main
 {
@@ -94,14 +93,9 @@ namespace Happy.Main
             }
         }
 
-        public object AcquireObject<TInstance>() where TInstance : class, new()
-        {
-            throw new NotImplementedException();
-        }
-
         public void ReleaseObject(object obj)
         {
-            throw new NotImplementedException();
+
         }
     }
 }

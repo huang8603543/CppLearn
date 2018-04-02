@@ -6,8 +6,6 @@ namespace Happy.Main
     {
         object AcquireObject(string classFullName);
 
-        object AcquireObject<TInstance>() where TInstance : class, new();
-
         void ReleaseObject(object obj);
     }
 }
