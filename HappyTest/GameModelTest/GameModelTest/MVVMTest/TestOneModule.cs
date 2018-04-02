@@ -15,7 +15,7 @@ namespace GameModelTest
             GameObject obj = Resources.Load("MVVMTestPanel") as GameObject;
             if (obj != null)
             {
-                GameObject panel = UnityEngine.Object.Instantiate(obj);
+                GameObject panel = Object.Instantiate(obj);
                 panel.name = "MVVMTestPanel";
                 panel.transform.SetParent(GameObject.Find("Canvas").transform, false);
                 mvvmTestPanel = new MVVMTestPanel();
@@ -33,8 +33,8 @@ namespace GameModelTest
 
         void InjectDepends()
         {
-            serviceLocator.RegisterSingleton<TestOneModuleDepend>(typeof(TestOneModuleDepend).FullName);
-            serviceLocator.RegisterSingleton<ITestOneModuleDepend, TestOneModuleDependInterfece>(typeof(ITestOneModuleDepend).FullName, typeof(TestOneModuleDependInterfece).FullName);
+            serviceLocator.RegisterSingleton(typeof(TestOneModuleDepend).FullName);
+            serviceLocator.RegisterSingleton(typeof(ITestOneModuleDepend).FullName, typeof(TestOneModuleDependInterfece).FullName);
         }
     }
 

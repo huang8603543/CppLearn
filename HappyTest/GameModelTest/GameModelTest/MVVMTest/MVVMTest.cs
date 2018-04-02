@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Happy.MVVM;
+﻿using Happy.MVVM;
 using UnityEngine;
 
 namespace GameModelTest

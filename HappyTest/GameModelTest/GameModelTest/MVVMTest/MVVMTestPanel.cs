@@ -142,6 +142,11 @@ namespace GameModelTest
         public int A { get; set; }
         public string B { get; set; }
 
+        public CustomTestData()
+        {
+
+        }
+
         public CustomTestData(int a, string b)
         {
             A = a; B = b;
